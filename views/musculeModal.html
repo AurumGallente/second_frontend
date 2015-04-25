@@ -1,0 +1,31 @@
+<!-- Modal -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel">{{popupAction}} muscule</h4>
+            </div>
+            <div class="modal-body">
+                <form name='addForm' class="form-horizontal" novalidate>
+                    <div class='form-group'>
+                        <input type='text' ng-minlength="4" name='title' ng-model='m.title' class='form-control' placeholder='title'  ng-required="true">
+                    </div>
+                    <div class='form-group'>
+                        <textarea class='form-control' name='description' ng-model="m.description" placeholder='description'></textarea>
+                    </div>
+                    <div class='form-group'>
+                        <input ng-Pattern="/^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#\&\?]*).*/" type='url' name='video' ng-model="m.video" placeholder='youtube video' class='form-control'> 
+                    </div>
+                    <div class='form-group'>
+                        <button ng-click='m.id ? update(m) : save(m)' ng-disabled="addForm.title.$invalid || addForm.description.$invalid || addForm.video.$invalid" type='submit' class='btn btn-default btn-lg btn-block'>Save</button>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+
+            </div>
+        </div>
+    </div>
+</div>

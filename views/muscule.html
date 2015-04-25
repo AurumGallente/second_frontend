@@ -1,0 +1,17 @@
+<a  data-toggle="modal" ng-click="reset()" data-target="#myModal" class='btn btn-default btn-block'>add new</a>
+<div class="col-xs-9">
+    <h1>{{muscule.title}}</h1>
+    <p>{{muscule.description}}</p>    
+    <div ng-show="show"  class="embed-responsive embed-responsive-16by9">        
+        <div my-youtube code="code"></div>
+    </div>
+    <div ng-hide="show"  class="text-warning">
+        <p>there is no video</p>
+    </div>
+</div>
+
+<div class="col-xs-3">
+    <a class='btn btn-default btn btn-default glyphicon glyphicon-edit' ng-click="populate(muscule)" data-toggle="modal" data-target="#myModal"></a>
+    <a class='btn btn-default btn btn-default glyphicon glyphicon-remove' ng-click="delete(muscule, null)"></a>
+</div>
+<div ng-include src="'views/musculeModal.html'"></div>

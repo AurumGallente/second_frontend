@@ -1,0 +1,27 @@
+<a  data-toggle="modal" ng-click="reset()" data-target="#myModal" class='btn btn-default btn-block'>add new</a>
+<div class="row">
+    <div class='text-center'>
+        <pagination items-per-page="perPage" boundary-links="true" rotate="false"  total-items="totalItems" ng-model="currentPage" max-size="maxSize" class="pagination-sm" ng-change="pageChanged()"></pagination>
+    </div>
+    
+</div>
+<div class="row">
+
+    <div class="" ng-repeat="muscule in muscules">
+        <div class="col-xs-9">
+            <h5>{{muscule.title}}</h5>
+            <p class="">{{muscule.description}}</p>
+            <p class="text-warning" ng-show="!muscule.video">no video</p>            
+        </div>
+        <div class="col-xs-3">
+            <div class="btn-group" role="group">
+                <a ui-sref="admin.muscule({id: muscule.id})"  class="btn btn-default glyphicon glyphicon-zoom-in"></a>
+                <span  class="btn btn-default glyphicon glyphicon-edit" aria-hidden="true" ng-click="populate(muscule)" data-toggle="modal" data-target="#myModal"></span>
+                <span  class="btn btn-default glyphicon glyphicon-remove" aria-hidden="true" ng-click="delete(muscule, $index)"></span>                
+            </div>
+        </div>
+        <hr class="col-xs-12" />
+    </div>
+</div>
+
+<div ng-include src="'views/musculeModal.html'"></div>

@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<html>
+    <head>
+        <title>TODO supply a title</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.min.css">
+        <link rel="stylesheet" href="css/slate.css">  
+        <link rel="stylesheet" href="css/custom.css"> 
+        <link rel="stylesheet" href="bower_components/bootstrap-spinedit/css/bootstrap-spinedit.css">
+        <script src="bower_components/jquery/dist/jquery.min.js"></script>
+        <script src="bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+        <script src="bower_components/angular/angular.min.js"></script>
+        <script src="bower_components/angular-ui-router/release/angular-ui-router.min.js"></script>
+        <script src="bower_components/angular-resource/angular-resource.min.js"></script>
+        <script src="bower_components/angular-flash-messages/angular-flash.js"></script>
+        <script src="bower_components/angular-bootstrap/ui-bootstrap.min.js"></script>
+        <script src="bower_components/angular-bootstrap/ui-bootstrap-tpls.min.js"></script>
+        <script src="bower_components/bootstrap-spinedit/js/bootstrap-spinedit.js"></script>
+
+
+
+        <script src="scripts/app.js"></script>
+
+    </head>
+    <body ng-app="app">
+        <div class="container">
+            <div>
+                <flash:messages></flash:messages>
+            </div>
+            <nav ng-controller="loginCtrl" class="navbar navbar-default">
+                <div class="container-fluid">
+                    <div class="navbar-header">
+                        <div ng-show="isLoggedIn">
+                            <ul class="nav navbar-nav">                               
+                                <li>
+                                    <a class="dropdown-toggle" data-toggle="dropdown" role="button">{{user.username}}<span class="caret"></span></a>
+                                    <ul class="dropdown-menu" role="menu">
+                                        <li><a ui-sref="admin">admin panel</a></li>
+                                        <li><a ng-click="logout()">logout</a></li>                                        
+                                    </ul>
+                                </li>
+                            </ul>
+                        </div>
+                        <div ng-hide="isLoggedIn">
+                            <ul class="nav navbar-nav">
+                                <li>
+                                    <form class="form-inline" name="loginForm" ng-submit="login(u.name, u.password)">
+                                        <div class="form-group">
+                                            <input class="form-control" type="text" ng-model="u.name" name="name" placeholder="login" required />
+                                        </div>
+                                        <div class="form-group">
+                                            <input class="form-control" type="password" ng-model="u.password" name="password" placeholder="password" required />
+                                        </div>
+                                        <button class="btn btn-default" type="submit" ng-disabled="loginForm.name.$invalid || loginForm.password.$invalid">Login</button>
+                                    </form>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </nav>
+            <div class="row">TODO write content</div>            
+            <div class="" ui-view=""></div>
+        </div>
+    </body>
+</html>

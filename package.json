@@ -1,0 +1,19 @@
+{
+  "name": "frontend",
+  "version": "0.0.1",
+  "description": "learn angular",
+  "main": "app.js",
+  "dependencies": {
+    "grunt": "^0.4.5"
+  },
+  "devDependencies": {
+    "grunt": "^0.4.5",
+    "grunt-connect": "^0.2.0",
+    "grunt-targethtml": "^0.2.6"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "aurum.gallente@gmail.com",
+  "license": "ISC"
+}
