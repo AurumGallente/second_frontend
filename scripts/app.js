@@ -1,19 +1,28 @@
 'use strict';
 
 var app = angular.module('app', ['ui.router', 'ngResource', 'flash', 'ui.bootstrap'])
-        .config(function ($sceDelegateProvider) {
+        .constant('backend', {
+            url: 'http://localhost:3000',
+            secure: 'https://localhost:8000'
+        })
+        .config(function ($sceDelegateProvider, backend) {
             $sceDelegateProvider.resourceUrlWhitelist([
                 'self',
-                '*://www.youtube.com/**'
+                '*://www.youtube.com/**',
+                backend.url,
+                backend.secure
             ]);
         })
         .config(function ($httpProvider) {
             $httpProvider.interceptors.push('AuthInterceptor');
         })
-        .constant('backend', {
-            url: 'http://localhost:3000',
-            secure: 'https://localhost:8000'
+        .config(function($locationProvider){
+            $locationProvider.html5Mode({
+                enabled: true,
+                requireBase: false
+});
         })
+
         .factory("genericServices", function () {
             return {
                 videoId: function (url) {
@@ -76,6 +85,12 @@ var app = angular.module('app', ['ui.router', 'ngResource', 'flash', 'ui.bootstr
                         templateUrl: 'views/muscule.html',
                         controller: 'singleMusculeCtrl'
                     })
+                    .state('admin.exercises', {
+                        parent: 'admin',
+                        url: '/exercises',
+                        templateUrl: 'views/exercises.html',
+                        controller: 'adminExerciseCtrl'
+                    })
                     .state('404', {
                         url: "/404",
                         templateUrl: "views/404.html"
@@ -87,8 +102,16 @@ var app = angular.module('app', ['ui.router', 'ngResource', 'flash', 'ui.bootstr
         .factory('musculeService', function (backend, $resource) {
             return $resource(backend.url + '/muscule/:id', null, {'update': {method: 'PUT'}});
         })
-        ;
+        
+        .factory('exerciseService', function (backend, $resource) {
+            return $resource(backend.url + '/exercise/:id', null, {'update': {method: 'PUT'}});
+        });
 app.controller('adminMusculeCommonCtrl', function ($scope, musculeService, flash, $location, genericServices) {
+    $scope.previewImageSrc = function (videoUrl) {
+        // TODO move it to genericServices
+        var url = "http://img.youtube.com/vi/" + genericServices.videoId(videoUrl) + "/mqdefault.jpg";
+        return url;
+    };
     $scope.populate = function (data) {
         $scope.popupAction = 'edit';
         $scope.master = data;
@@ -118,14 +141,18 @@ app.controller('adminMusculeCommonCtrl', function ($scope, musculeService, flash
             $('#myModal').modal('hide');
             flash('alert alert-success', 'muscule "' + $scope.m.title + '" added');
             $scope.m = {};
+            console.log(m);
+            if ($scope.muscules)
+                $scope.muscules.push(m);
         }, function (err) {
             console.log(err);
         });
     };
     $scope.delete = function (m, inx) {
         console.log(m);
+
         musculeService.delete({id: m.id}, function () {
-            if (inx) {
+            if (inx !== null) {
                 var to_delete = $scope.muscules[inx];
                 console.log(m);
                 $scope.muscules.splice(inx, 1);
@@ -136,6 +163,61 @@ app.controller('adminMusculeCommonCtrl', function ($scope, musculeService, flash
         });
     };
 });
+
+app.controller('adminExerciseCommonCtrl', function ($scope, exerciseService, flash, $location) {    
+    $scope.populate = function (data) {
+        $scope.popupAction = 'edit';
+        $scope.master = data;
+        $scope.e = angular.copy(data);
+        console.log(data);
+    };
+    $scope.reset = function () {
+        $scope.popupAction = 'add new';
+        $scope.e = {};
+    };
+    $scope.update = function (e) {
+        console.log('updaded ');
+        var data = e;
+        exerciseService.update({id: e.id}, e, function () {
+            $scope.master.name = data.name;
+            $scope.master.description = data.description;
+            
+            $('#myModal').modal('hide');
+            flash('alert alert-success', 'exercise ' + $scope.master.name + ' updated'); 
+        });
+    };
+    $scope.save = function (e) {
+        exerciseService.save(e, function (e) {
+            console.log(e);
+            $('#myModal').modal('hide');
+            flash('alert alert-success', 'exercise "' + $scope.e.name + '" added');
+            $scope.e = {};
+            console.log(e);
+            if ($scope.exercises)
+                $scope.exercises.push(e);
+        }, function (err) {
+            console.log(err);
+        });
+    };
+    $scope.delete = function (e, inx) {
+        console.log(e);
+        exerciseService.delete({id: e.id}, function () {
+            if (inx !== null) {
+                var to_delete = $scope.exercises[inx];
+                console.log(e);
+                $scope.exercises.splice(inx, 1);
+            } else {
+                $location.path("admin/exercises");
+            }
+            flash('alert alert-warning', 'exercise "' + e.title + '" deleted');
+        });
+    };
+});
+
+
+
+
+
 app.controller('adminMusculeCtrl', function ($scope, musculeService, $controller) {
     $scope.currentPage = 1;
     $scope.maxSize = 5;
@@ -172,6 +254,28 @@ app.controller('singleMusculeCtrl', function ($scope, $stateParams, musculeServi
     });
     angular.extend(this, $controller('adminMusculeCommonCtrl', {$scope: $scope}));
 
+});
+app.controller('adminExerciseCtrl', function ($scope, backend, flash, exerciseService, $controller) {
+    $scope.currentPage = 1;
+    $scope.maxSize = 5;
+    $scope.perPage = 10;
+    var getExercises = function (page, perPage) {
+        return exerciseService.get({page: page, perPage: perPage}, function (exercises) {
+            $scope.exercises = exercises.rows;
+            console.log(exercises.rows);
+            $scope.totalItems = parseInt(exercises.count);
+
+        });
+    };
+    $scope.pageChanged = function () {
+        $scope.exercises = getExercises($scope.currentPage, $scope.perPage);
+    };
+    $scope.setPage = function (pageNo) {
+        $scope.currentPage = pageNo;
+    };
+    $scope.exercises = getExercises($scope.currentPage, $scope.perPage);
+    $scope.popupAction = 'add new';    
+    angular.extend(this, $controller('adminExerciseCommonCtrl', {$scope: $scope}));
 });
 app.controller('loginCtrl', function ($scope, backend, $http, UserFactory, $state, flash) {
     //$scope.user = UserFactory.getUser();

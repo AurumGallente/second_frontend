@@ -9,23 +9,24 @@ and open the template in the editor.
         <title>TODO supply a title</title>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.min.css">
-        <link rel="stylesheet" href="css/slate.css">  
-        <link rel="stylesheet" href="css/custom.css"> 
-        <link rel="stylesheet" href="bower_components/bootstrap-spinedit/css/bootstrap-spinedit.css">
-        <script src="bower_components/jquery/dist/jquery.min.js"></script>
-        <script src="bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
-        <script src="bower_components/angular/angular.min.js"></script>
-        <script src="bower_components/angular-ui-router/release/angular-ui-router.min.js"></script>
-        <script src="bower_components/angular-resource/angular-resource.min.js"></script>
-        <script src="bower_components/angular-flash-messages/angular-flash.js"></script>
-        <script src="bower_components/angular-bootstrap/ui-bootstrap.min.js"></script>
-        <script src="bower_components/angular-bootstrap/ui-bootstrap-tpls.min.js"></script>
-        <script src="bower_components/bootstrap-spinedit/js/bootstrap-spinedit.js"></script>
-
-
-
-        <script src="scripts/app.js"></script>
+        <link rel="shortcut icon" type="image/png" href="/images/favicon.png"/>
+        <base href="/">
+        <!--        <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.min.css">
+                <link rel="stylesheet" href="css/slate.css">  
+                <link rel="stylesheet" href="css/custom.css"> 
+                <link rel="stylesheet" href="bower_components/bootstrap-spinedit/css/bootstrap-spinedit.css">-->
+        <link rel="stylesheet" href="build/built.css">
+                <script src="bower_components/jquery/dist/jquery.min.js"></script>
+                <script src="bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+                <script src="bower_components/angular/angular.min.js"></script>
+                <script src="bower_components/angular-ui-router/release/angular-ui-router.min.js"></script>
+                <script src="bower_components/angular-resource/angular-resource.min.js"></script>
+                <script src="bower_components/angular-flash-messages/angular-flash.js"></script>
+                <script src="bower_components/angular-bootstrap/ui-bootstrap.min.js"></script>
+                <script src="bower_components/angular-bootstrap/ui-bootstrap-tpls.min.js"></script>
+                <script src="bower_components/bootstrap-spinedit/js/bootstrap-spinedit.js"></script>
+                <script src="scripts/app.js"></script>
+<!--        <script src="build/built.js"></script>-->
 
     </head>
     <body ng-app="app">
@@ -33,39 +34,59 @@ and open the template in the editor.
             <div>
                 <flash:messages></flash:messages>
             </div>
-            <nav ng-controller="loginCtrl" class="navbar navbar-default">
+            <nav class="navbar navbar-default" ng-controller="loginCtrl">
                 <div class="container-fluid">
+                    <!-- Brand and toggle get grouped for better mobile display -->
                     <div class="navbar-header">
-                        <div ng-show="isLoggedIn">
-                            <ul class="nav navbar-nav">                               
-                                <li>
-                                    <a class="dropdown-toggle" data-toggle="dropdown" role="button">{{user.username}}<span class="caret"></span></a>
-                                    <ul class="dropdown-menu" role="menu">
-                                        <li><a ui-sref="admin">admin panel</a></li>
-                                        <li><a ng-click="logout()">logout</a></li>                                        
-                                    </ul>
-                                </li>
-                            </ul>
-                        </div>
-                        <div ng-hide="isLoggedIn">
-                            <ul class="nav navbar-nav">
-                                <li>
-                                    <form class="form-inline" name="loginForm" ng-submit="login(u.name, u.password)">
-                                        <div class="form-group">
-                                            <input class="form-control" type="text" ng-model="u.name" name="name" placeholder="login" required />
-                                        </div>
-                                        <div class="form-group">
-                                            <input class="form-control" type="password" ng-model="u.password" name="password" placeholder="password" required />
-                                        </div>
-                                        <button class="btn btn-default" type="submit" ng-disabled="loginForm.name.$invalid || loginForm.password.$invalid">Login</button>
-                                    </form>
-                                </li>
-                            </ul>
-                        </div>
+                        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                            <span class="sr-only">Toggle navigation</span>
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                        </button>
+                        <a ui-sref="admin" class="navbar-brand">admin panel</a>      
                     </div>
-                </div>
+
+                    <!-- Collect the nav links, forms, and other content for toggling -->
+                    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                        <ul class="nav navbar-nav">
+
+                            <li class="dropdown">
+                                <a  class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Content<span class="caret"></span></a>
+                                <ul class="dropdown-menu" role="menu">
+                                    <li><a ui-sref="admin" >admin panel</a></li>
+                                    <li class="divider"></li>
+                                    <li><a ui-sref="admin.muscules">muscules</a></li>
+                                    <li class="divider"></li>
+                                    <li><a ui-sref="admin.exercises">exercises</a></li>
+                                    <li class="divider"></li> 
+                                </ul>
+                            </li>
+                        </ul>                        
+                        <form ng-hide="isLoggedIn"  class="navbar-form navbar-left" name="loginForm" ng-submit="login(u.name, u.password)">
+                            <div class="form-group">
+                                <input class="form-control" type="text" ng-model="u.name" name="name" placeholder="login" required />
+                            </div>
+                            <div class="form-group">
+                                <input class="form-control" type="password" ng-model="u.password" name="password" placeholder="password" required />
+                            </div>
+                            <button class="btn btn-default" type="submit" ng-disabled="loginForm.name.$invalid || loginForm.password.$invalid">Login</button>
+                        </form>
+                        <ul class="nav navbar-nav navbar-right">
+
+                            <li class="dropdown" ng-show="isLoggedIn">
+                                <a  class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">{{user.username}} <span class="caret"></span></a>
+                                <ul class="dropdown-menu" role="menu">
+                                    <li><a ng-click="logout()">logout</a></li>                                    
+                                    <li class="divider"></li> 
+                                    
+                                </ul>
+                            </li>
+                        </ul>
+                    </div><!-- /.navbar-collapse -->
+                </div><!-- /.container-fluid -->
             </nav>
-            <div class="row">TODO write content</div>            
+                     
             <div class="" ui-view=""></div>
         </div>
     </body>
